@@ -6,9 +6,9 @@ from os import system, name
 import matplotlib.pyplot as plt
 
 
-CITY_DATA = {'chicago': 'chicago.csv',
-             'new york city': 'new_york_city.csv',
-             'washington': 'washington.csv'}
+CITY_DATA = {'chicago': 'test_data/chicago_test.csv',
+             'new york city': 'test_data/new_york_test.csv',
+             'washington': 'test_data/washington_test.csv'}
 
 info_codes = ['SEVERITY_ERROR', 'CONTINUE_GRACEFULLY']
 
@@ -288,7 +288,7 @@ def trip_duration_stats(df):
     print('units.')
     # display mean travel time
     print('Average trip duration is :', end=' ')
-    print('Average trip duration is : ' + str(df['Trip Duration'].mean()), end=' ')
+    print(str(df['Trip Duration'].mean()), end=' ')
     print('units.')
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
@@ -363,13 +363,13 @@ def visualize_user_counts_day_wise(df):
     df['day_in_month'] = df['Start Time'].dt.day
     df_temp = df.groupby(['day_in_month', 'month', 'day_of_week', 'day_of_week_num'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=4).reset_index().rename_axis(None, axis=1)
-    df_temp = df_temp.groupby('day_of_week').mean()
+    df_temp = df_temp.groupby('day_of_week').mean().fillna(0)
     df_temp.sort_values('day_of_week_num', inplace=True)
     ax = plt.subplot()
-
-    plt.plot(df_temp['day_of_week'].values, df_temp['Customer'].values, color='blue', label='Customer')
-    plt.plot(df_temp['day_of_week'].values, df_temp['Dependent'].values, color='red', label='Dependent')
-    plt.plot(df_temp['day_of_week'].values, df_temp['Subscriber'].values, color='green', label='Subscriber')
+    print(df)
+    plt.plot(df_temp.index.values, df_temp['Customer'].values, color='blue', label='Customer')
+    plt.plot(df_temp.index.values, df_temp['Dependent'].values, color='red', label='Dependent')
+    plt.plot(df_temp.index.values, df_temp['Subscriber'].values, color='green', label='Subscriber')
 
     ax.legend()
     ax.autoscale_view()
@@ -379,13 +379,14 @@ def visualize_user_counts_day_wise(df):
 def visualize_user_counts_month_wise(df):
     df_temp = df.groupby('month')['User Type'].value_counts()
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
+    print(df_temp)
     ax = plt.subplot()
 
     plt.plot(df_temp['month'].values, df_temp['Customer'].values, color='blue', label='Customer')
     plt.plot(df_temp['month'].values, df_temp['Dependent'].values, color='red', label='Dependent')
     plt.plot(df_temp['month'].values, df_temp['Subscriber'].values, color='green', label='Subscriber')
 
-    plt.xticks(df_temp['month'].values, month_helper_list)
+    plt.xticks(list(range(len(month_helper_list))), month_helper_list)
     ax.legend()
     ax.autoscale_view()
     plt.show()
@@ -474,32 +475,37 @@ def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
-        print('\nWish to see the raw data? Hit "Enter" to see and "No" to move on!!')
-        ch1 = input('Enter Choice:')
-        if ch1 == '':
-            print(df.head())
-        _ = input('Continuing to next phase!!! Press Enter to continue')
-        # print(df.columns)
-        printFiltersFormatted('Stat Calculation')
-        print('*' * size)
-        print('*' + ('Time Stats'.center(size - 2, " ")) + '*')
-        print('*' * size)
-        time_stats(df)
-        print('*' * size)
-        print('*' + ('Station Stats'.center(size - 2, " ")) + '*')
-        print('*' * size)
-        station_stats(df)
-        print('*' * size)
-        print('*' + ('Trip Duration Stats'.center(size - 2, " ")) + '*')
-        print('*' * size)
-        trip_duration_stats(df)
-        print('*' * size)
-        print('*' + ('User Stats'.center(size - 2, " ")) + '*')
-        print('*' * size)
-        user_stats(df)
+        if not(df.empty):
+            print('\nWish to see the raw data? Hit "Enter" to see and "No" to move on!!')
+            ch1 = input('Enter Choice:')
+            if ch1 == '':
+                print(df.head())
+            _ = input('\nContinuing to next phase!!! Press Enter to continue')
+            # print(df.columns)
+            printFiltersFormatted('Stat Calculation')
+            print('*' * size)
+            print('*' + ('Time Stats'.center(size - 2, " ")) + '*')
+            print('*' * size)
+            time_stats(df)
+            print('*' * size)
+            print('*' + ('Station Stats'.center(size - 2, " ")) + '*')
+            print('*' * size)
+            station_stats(df)
+            print('*' * size)
+            print('*' + ('Trip Duration Stats'.center(size - 2, " ")) + '*')
+            print('*' * size)
+            trip_duration_stats(df)
+            print('*' * size)
+            print('*' + ('User Stats'.center(size - 2, " ")) + '*')
+            print('*' * size)
+            user_stats(df)
 
-        visualize_data(df.copy())
-
+            visualize_data(df.copy())
+        else:
+            printFiltersFormatted()
+            print('ERROR'.center(size, '+'))
+            print('Unfortunately no data was found for the above chosen filters!!'.center(size, ' '))
+            print(''.center(size, '+'))
         print('\n')
         print('=' * size)
         print('Done'.center(size, '*'))
