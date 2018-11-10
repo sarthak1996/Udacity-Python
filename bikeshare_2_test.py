@@ -227,7 +227,7 @@ def load_data(city, month, day):
     printFiltersFormatted(phase)
     print('Done!..Loading data completed without any errors')
     print('')
-    _ = input('Press any key to continue..')
+    _ = input('Press enter to continue..')
     return df
 
 
@@ -360,8 +360,10 @@ def visualize_user_types_birth_year(df):
 
 
 def visualize_user_counts_day_wise(df):
-    df_temp = df.groupby(['day_of_week', 'day_of_week_num'])['User Type'].value_counts()
-    df_temp = df_temp.unstack(level=2).reset_index().rename_axis(None, axis=1)
+    df['day_in_month'] = df['Start Time'].dt.day
+    df_temp = df.groupby(['day_in_month', 'month', 'day_of_week', 'day_of_week_num'])['User Type'].value_counts()
+    df_temp = df_temp.unstack(level=4).reset_index().rename_axis(None, axis=1)
+    df_temp = df_temp.groupby('day_of_week').mean()
     df_temp.sort_values('day_of_week_num', inplace=True)
     ax = plt.subplot()
 
@@ -394,7 +396,7 @@ def visualize_data(df):
     choice = input('\n\nWould you like to visualize the data? We have some awesome predefined visualizations!!(yes/no)')
     if choice != 'yes':
         return
-    _ = input('Press any key to continue!!..Warning screen will be cleared once a key is pressed!!')
+    _ = input('Press Enter to continue!!..Warning screen will be cleared once a key is pressed!!')
     printFiltersFormatted(phase)
     while True:
         print('Here are some awesome visualizations:')
@@ -419,7 +421,7 @@ def visualize_data(df):
                 print('Visualize user counts Month wise, Day wise, Hour wise!!')
             else:
                 print('Visualize user types city wise!!')
-            _ = input('Press any key to continue!!..')
+            _ = input('Press Enter to continue!!..')
             printFiltersFormatted(phase)
             continue
         else:
@@ -472,12 +474,11 @@ def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
-        printf('\nWish to see the raw data? Hit "Enter" to see and "No" to move on!!')
+        print('\nWish to see the raw data? Hit "Enter" to see and "No" to move on!!')
         ch1 = input('Enter Choice:')
         if ch1 == '':
             print(df.head())
-        else:
-            _ = input('Continuing to next phase!!! Press any key to continue')
+        _ = input('Continuing to next phase!!! Press Enter to continue')
         # print(df.columns)
         printFiltersFormatted('Stat Calculation')
         print('*' * size)
