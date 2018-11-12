@@ -148,7 +148,7 @@ def get_filters():
     print('\n' * 2)
     while 1:
         city = input(
-            'Enter a city for which you would like to filter the data\n1. C for Chicago\n2. N for New York\n3. W for Washington,\n4. Hit enter (to disable filtering)\n\nPS: Case sensitivity has been disabled!\n\nEnter city: '
+            'Enter a city for which you would like to filter the data\n1. C for Chicago\n2. N for New York\n3. W for Washington,\n4. Hit enter (to disable filtering)\nYou can also enter comma separated values(example:C,N)\n\nPS: Case sensitivity has been disabled!\n\nEnter city: '
         )
         city = city.upper()
         is_comma_separated = False
@@ -189,6 +189,7 @@ def get_filters():
         print(
             'Choose months from the below list\nor\nHit enter (to disable filtering)'
         )
+        print('\nYou can also enter comma separated values(example:Jan,Feb)')
         print(month_helper_list)
         month = input('\nEnter month: ')
         month = month.upper()
@@ -227,6 +228,7 @@ def get_filters():
         print(
             'Choose days from the below list\nor\nHit enter (to disable filtering)'
         )
+        print('\nYou can also enter comma separated values(example:Mon,Tue)')
         print(days_helper_list)
         day = input("\nEnter day: ")
         day = day.upper()
@@ -276,7 +278,6 @@ def load_data(city, month, day):
     """
     phase = 'Load Data'
     printFiltersFormatted(phase)
-    print(city, month, day)
     print('Loading data!!...')
     df = pd.DataFrame()
     if city is not None:

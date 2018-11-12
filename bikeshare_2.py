@@ -103,7 +103,7 @@ def get_filters():
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     print('\n' * 2)
     while 1:
-        city = input('Enter a city for which you would like to filter the data\n1. C for Chicago\n2. N for New York\n3. W for Washington,\n4. Hit enter (to disable filtering)\n\nPS: Case sensitivity has been disabled!\n\nEnter city: ')
+        city = input('Enter a city for which you would like to filter the data\n1. C for Chicago\n2. N for New York\n3. W for Washington,\n4. Hit enter (to disable filtering)\n\nPS: Case sensitivity has been disabled!\nYou can also enter comma separated values(example:C,N)\n\nEnter city: ')
         city = city.upper()
         message = validateInputs('CITY', city)
         if message == info_codes[0]:
@@ -131,6 +131,7 @@ def get_filters():
     while 1:
         print('Choose months from the below list\nor\nHit enter (to disable filtering)')
         print(month_helper_list)
+        print('\nYou can also enter comma separated values(example:Jan,Feb)')
         month = input('\nEnter month: ')
         month = month.upper()
         message = validateInputs('MONTH', month)
@@ -157,6 +158,7 @@ def get_filters():
     while 1:
         print('Choose days from the below list\nor\nHit enter (to disable filtering)')
         print(days_helper_list)
+        print('\nYou can also enter comma separated values(example:Mon,Tue)')
         day = input("\nEnter day: ")
         day = day.upper()
         message = validateInputs('DAY', day)

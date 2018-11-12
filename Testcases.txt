@@ -1,0 +1,30 @@
+***Filter and load Test***
+1. City - All, month -chosen, day -chosen
+2. City -All, month -chosen, day- csv
+3. City -All, month -csv, day-chosen
+4. City - All, month-csv, day-csv
+5. City - csv, month -chosen, day -chosen
+6. City - csv, month -chosen, day- csv
+7. City - csv, month -csv, day-chosen
+8. City - csv, month-csv, day-csv
+
+
+***Stat Test***
+1. City - All, month -chosen, day -chosen
+2. City -All, month -chosen, day- csv
+3. City -All, month -csv, day-chosen
+4. City - All, month-csv, day-csv
+5. City - csv, month -chosen, day -chosen
+6. City - csv, month -chosen, day- csv
+7. City - csv, month -csv, day-chosen
+8. City - csv, month-csv, day-csv
+
+***Visualization Test***
+1. City - All, month -chosen, day -chosen
+2. City -All, month -chosen, day- csv
+3. City -All, month -csv, day-chosen
+4. City - All, month-csv, day-csv
+5. City - csv, month -chosen, day -chosen
+6. City - csv, month -chosen, day- csv
+7. City - csv, month -csv, day-chosen
+8. City - csv, month-csv, day-csv
