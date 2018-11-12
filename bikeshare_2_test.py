@@ -33,6 +33,10 @@ filters_used = {
     'VISUAL_SUB': []
 }
 size = 70
+is_comma_separated = False
+is_comma_separated_city = False
+is_comma_separated_day = False
+is_comma_separated_month = False
 
 
 def clear():
@@ -73,39 +77,57 @@ def printFiltersFormatted(phase='Filter Data'):
     print('\n\n')
 
 
-def validateInputs(mode, value):
+def validateInputs(mode, value, validation_list=None):
+    global is_comma_separated
+    value, is_comma_separated = validate_comma_separated_values(value, validation_list)
+    if type(value) is str and value == info_codes[0]:
+        return info_codes[0], None
+    if is_comma_separated:
+        return value, True
     if mode.upper() == 'CITY':
         if value.upper() == '':
-            return info_codes[1]
+            return info_codes[1], None
         elif value.upper() in city_helper_dict:
-            return CITY_DATA[city_helper_dict[value.upper()]]
+            return CITY_DATA[city_helper_dict[value.upper()]], None
         else:
-            return info_codes[0]
+            return info_codes[0], None
     elif mode.upper() == 'MONTH':
         if value.upper() == '':
-            return info_codes[1]
+            return info_codes[1], None
         elif value.upper() in month_helper_list:
-            return month_helper_list.index(value.upper()) + 1
+            return month_helper_list.index(value.upper()) + 1, None
         else:
-            return info_codes[0]
+            return info_codes[0], None
     elif mode.upper() == 'DAY':
         if value.upper() == '':
-            return info_codes[1]
+            return info_codes[1], None
         elif value.upper() in days_helper_list:
-            return days_helper_list.index(value.upper())
+            return days_helper_list.index(value.upper()), None
         else:
-            return info_codes[0]
+            return info_codes[0], None
 
 
 def format_city_name(city):
     if type(city) is not str:
-        city = '_ & _'.join(city).replace('[', '').replace('{', '').replace(
+        city = '_,_'.join(city).replace('[', '').replace('{', '').replace(
             ']', '').replace('}', '')
     else:
         city = city.replace('[', '').replace('{', '').replace(']', '').replace(
             '}', '')
     return ' '.join(
         x.replace('.csv', '').capitalize() for x in city.split('_'))
+
+
+def validate_comma_separated_values(values, validation_list):
+    validation_list = set(validation_list)
+    if ',' in values:
+        values = values.split(',')
+        values = set(values)
+        if values.issubset(validation_list):
+            return list(values), True
+        return info_codes[0], False
+    else:
+        return values, False
 
 
 def get_filters():
@@ -117,6 +139,7 @@ def get_filters():
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
+    global is_comma_separated_month, is_comma_separated_day, is_comma_separated_city, is_comma_separated
     clear()
     clear()
     clear()
@@ -128,15 +151,17 @@ def get_filters():
             'Enter a city for which you would like to filter the data\n1. C for Chicago\n2. N for New York\n3. W for Washington,\n4. Hit enter (to disable filtering)\n\nPS: Case sensitivity has been disabled!\n\nEnter city: '
         )
         city = city.upper()
-        message = validateInputs('CITY', city)
-        if message == info_codes[0]:
+        is_comma_separated = False
+        message, is_comma_separated_city = validateInputs('CITY', city, list(city_helper_dict.keys()))
+
+        if type(message) is str and message == info_codes[0]:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
             print('City Mismatch!..Please enter the first letter of the city'.
                   center(size, ' '))
             print(''.center(size, '+'))
             print('\n\n')
-        elif message == info_codes[1]:
+        elif type(message) is str and message == info_codes[1]:
             print(
                 'Running without any filter on city...To check the data handling'
             )
@@ -147,9 +172,15 @@ def get_filters():
             printFiltersFormatted()
             break
         else:
-            print('Using ' + format_city_name(message) + ' as city...')
-            city = message
-            filters_used['CITY'].append(city)
+            if is_comma_separated:
+                print('Using ' + format_city_name(message) + ' as city...')
+                city = message
+                for c in city:
+                    filters_used['CITY'].append(city_helper_dict[c])
+            else:
+                print('Using ' + format_city_name(message) + ' as city...')
+                city = message
+                filters_used['CITY'].append(city)
             printFiltersFormatted()
             break
         print('=' * size)
@@ -161,7 +192,8 @@ def get_filters():
         print(month_helper_list)
         month = input('\nEnter month: ')
         month = month.upper()
-        message = validateInputs('MONTH', month)
+        is_comma_separated = False
+        message, is_comma_separated_month = validateInputs('MONTH', month, month_helper_list)
         if message == info_codes[0]:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
@@ -177,9 +209,16 @@ def get_filters():
             printFiltersFormatted()
             break
         else:
-            print('Using ' + month_helper_list[message - 1] + ' as month...')
-            month = message
-            filters_used['MONTH'].append(month_helper_list[month - 1])
+            if is_comma_separated:
+                print('Using ' + format_city_name(message) + ' as month...')
+                for m in message:
+                    print(m)
+                    filters_used['MONTH'].append(m)
+                month = list(map(month_helper_list.index, message))
+            else:
+                print('Using ' + month_helper_list[message - 1] + ' as month...')
+                month = message
+                filters_used['MONTH'].append(month_helper_list[month - 1])
             printFiltersFormatted()
             break
         print('=' * size)
@@ -191,7 +230,8 @@ def get_filters():
         print(days_helper_list)
         day = input("\nEnter day: ")
         day = day.upper()
-        message = validateInputs('DAY', day)
+        is_comma_separated = False
+        message, is_comma_separated_day = validateInputs('DAY', day, days_helper_list)
         if message == info_codes[0]:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
@@ -207,9 +247,15 @@ def get_filters():
             printFiltersFormatted()
             break
         else:
-            print('Using ' + days_helper_list[message] + ' as day...')
-            day = days_helper_list[message]
-            filters_used['DAY'].append(day)
+            if is_comma_separated:
+                print('Using ' + format_city_name(message) + ' as day...')
+                for d in message:
+                    filters_used['DAY'].append(d)
+                day = message
+            else:
+                print('Using ' + days_helper_list[message] + ' as day...')
+                day = days_helper_list[message]
+                filters_used['DAY'].append(day)
             printFiltersFormatted()
             break
         print('=' * size)
@@ -230,11 +276,18 @@ def load_data(city, month, day):
     """
     phase = 'Load Data'
     printFiltersFormatted(phase)
+    print(city, month, day)
     print('Loading data!!...')
     df = pd.DataFrame()
     if city is not None:
-        df = pd.read_csv(city)
-        df['City'] = city[0].upper()
+        if is_comma_separated_city:
+            df = []
+            for city_alpha in city:
+                df.append(pd.read_csv(CITY_DATA[city_helper_dict[city_alpha]]))
+            df = pd.concat(df, sort=False)
+        else:
+            df = pd.read_csv(city)
+            df['City'] = city[0].upper()
     else:
         df1 = pd.read_csv(CITY_DATA[city_helper_dict['C']])
         df1['City'] = 'C'
@@ -254,10 +307,23 @@ def load_data(city, month, day):
     df['day_of_week_num'] = df['day_of_week']
     df['day_of_week'] = df['day_of_week'].apply(lambda x: days_helper_list[x])
 
+    if is_comma_separated_month or is_comma_separated_day:
+        df['is_included_in_filters'] = 0
+
     if month is not None:
-        df = df[df.month == month]
+        if is_comma_separated_month:
+            for month_alpha in month:
+                df.loc[df['month'] == month_alpha + 1, 'is_included_in_filters'] = 1
+        else:
+            df = df[df.month == month]
     if day is not None:
-        df = df[df.day_of_week == day]
+        if is_comma_separated_day:
+            for day_alpha in day:
+                df.loc[df['day_of_week'] == day_alpha, 'is_included_in_filters'] = 1
+        else:
+            df = df[df.day_of_week == day]
+    if is_comma_separated_month or is_comma_separated_day:
+        df = df[df.is_included_in_filters == 1]
     printFiltersFormatted(phase)
     print('Done!..Loading data completed without any errors')
     print('')
@@ -537,8 +603,9 @@ def visualize_data(df):
     )
     if choice != 'yes':
         return
+    print('[WARNING]: Visualization with filters would lead to filtered out values to be defaulted to 0!!')
     _ = input(
-        'Press Enter to continue!!..Warning screen will be cleared once a key is pressed!!'
+        '\nPress Enter to continue!!..Warning screen will be cleared once a key is pressed!!'
     )
     printFiltersFormatted(phase)
     while True:
