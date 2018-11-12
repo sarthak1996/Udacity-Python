@@ -5,18 +5,33 @@ import datetime
 from os import system, name
 import matplotlib.pyplot as plt
 
-
-CITY_DATA = {'chicago': 'test_data/chicago_test.csv',
-             'new york city': 'test_data/new_york_test.csv',
-             'washington': 'test_data/washington_test.csv'}
+# CITY_DATA = {
+#     'chicago': 'test_data/chicago_test.csv',
+#     'new york city': 'test_data/new_york_test.csv',
+#     'washington': 'test_data/washington_test.csv'
+# }
+CITY_DATA = {
+    'chicago': 'chicago.csv',
+    'new york city': 'new_york_city.csv',
+    'washington': 'washington.csv'
+}
 
 info_codes = ['SEVERITY_ERROR', 'CONTINUE_GRACEFULLY']
 
 city_helper_dict = {'C': 'chicago', 'N': 'new york city', 'W': 'washington'}
-month_helper_list = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+month_helper_list = [
+    'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT',
+    'NOV', 'DEC'
+]
 days_helper_list = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
-filters_used = {'CITY': [], 'MONTH': [], 'DAY': [], 'VISUAL': [], 'VISUAL_SUB': []}
+filters_used = {
+    'CITY': [],
+    'MONTH': [],
+    'DAY': [],
+    'VISUAL': [],
+    'VISUAL_SUB': []
+}
 size = 70
 
 
@@ -40,14 +55,17 @@ def printFiltersFormatted(phase='Filter Data'):
     print(('Phase: ' + phase).center(size, ':'))
     print('Filtering data based on following params'.center(size, '='))
     print('*' * size)
-    city_filter = 'Included Cities: ' + str(format_city_name(filters_used['CITY']))
+    city_filter = 'Included Cities: ' + str(
+        format_city_name(filters_used['CITY']))
     print('*' + city_filter.center(size - 2, ' ') + '*')
-    month_filter = 'Included Months: ' + str(format_city_name(filters_used['MONTH']))
+    month_filter = 'Included Months: ' + str(
+        format_city_name(filters_used['MONTH']))
     print('*' + month_filter.center(size - 2, ' ') + '*')
     day_filter = 'Included Days: ' + str(format_city_name(filters_used['DAY']))
     print('*' + day_filter.center(size - 2, ' ') + '*')
     visual_filter = 'Visualization type: ' + str(filters_used['VISUAL'])
-    visual_filter_sub = 'Visualization subtype: ' + str(filters_used['VISUAL_SUB'])
+    visual_filter_sub = 'Visualization subtype: ' + str(
+        filters_used['VISUAL_SUB'])
     if phase == 'Data Visualization':
         print('*' + visual_filter.center(size - 2, ' ') + '*')
         print('*' + visual_filter_sub.center(size - 2, ' ') + '*')
@@ -81,10 +99,13 @@ def validateInputs(mode, value):
 
 def format_city_name(city):
     if type(city) is not str:
-        city = '_ & _'.join(city).replace('[', '').replace('{', '').replace(']', '').replace('}', '')
+        city = '_ & _'.join(city).replace('[', '').replace('{', '').replace(
+            ']', '').replace('}', '')
     else:
-        city = city.replace('[', '').replace('{', '').replace(']', '').replace('}', '')
-    return ' '.join(x.replace('.csv', '').capitalize() for x in city.split('_'))
+        city = city.replace('[', '').replace('{', '').replace(']', '').replace(
+            '}', '')
+    return ' '.join(
+        x.replace('.csv', '').capitalize() for x in city.split('_'))
 
 
 def get_filters():
@@ -103,17 +124,22 @@ def get_filters():
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     print('\n' * 2)
     while 1:
-        city = input('Enter a city for which you would like to filter the data\n1. C for Chicago\n2. N for New York\n3. W for Washington,\n4. Hit enter (to disable filtering)\n\nPS: Case sensitivity has been disabled!\n\nEnter city: ')
+        city = input(
+            'Enter a city for which you would like to filter the data\n1. C for Chicago\n2. N for New York\n3. W for Washington,\n4. Hit enter (to disable filtering)\n\nPS: Case sensitivity has been disabled!\n\nEnter city: '
+        )
         city = city.upper()
         message = validateInputs('CITY', city)
         if message == info_codes[0]:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
-            print('City Mismatch!..Please enter the first letter of the city'.center(size, ' '))
+            print('City Mismatch!..Please enter the first letter of the city'.
+                  center(size, ' '))
             print(''.center(size, '+'))
             print('\n\n')
         elif message == info_codes[1]:
-            print('Running without any filter on city...To check the data handling')
+            print(
+                'Running without any filter on city...To check the data handling'
+            )
             city = None
             filters_used['CITY'].append(CITY_DATA[city_helper_dict['C']])
             filters_used['CITY'].append(CITY_DATA[city_helper_dict['N']])
@@ -129,7 +155,9 @@ def get_filters():
         print('=' * size)
     # get user input for month (all, january, february, ... , june)
     while 1:
-        print('Choose months from the below list\nor\nHit enter (to disable filtering)')
+        print(
+            'Choose months from the below list\nor\nHit enter (to disable filtering)'
+        )
         print(month_helper_list)
         month = input('\nEnter month: ')
         month = month.upper()
@@ -137,7 +165,9 @@ def get_filters():
         if message == info_codes[0]:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
-            print('Month Mismatch!..Please enter only the first 3 letters of month!...'.center(size, ' '))
+            print(
+                'Month Mismatch!..Please enter only the first 3 letters of month!...'.
+                center(size, ' '))
             print(''.center(size, '+'))
             print('\n\n')
         elif message == info_codes[1]:
@@ -155,7 +185,9 @@ def get_filters():
         print('=' * size)
     # get user input for day of week (all, monday, tuesday, ... sunday)
     while 1:
-        print('Choose days from the below list\nor\nHit enter (to disable filtering)')
+        print(
+            'Choose days from the below list\nor\nHit enter (to disable filtering)'
+        )
         print(days_helper_list)
         day = input("\nEnter day: ")
         day = day.upper()
@@ -163,7 +195,9 @@ def get_filters():
         if message == info_codes[0]:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
-            print('Day Mismatch!..Please enter only the first 3 letters of day!...'.center(size, ' '))
+            print(
+                'Day Mismatch!..Please enter only the first 3 letters of day!...'.
+                center(size, ' '))
             print(''.center(size, '+'))
             print('\n\n')
         elif message == info_codes[1]:
@@ -247,7 +281,9 @@ def time_stats(df):
     # display the most common start hour
     most_common_hour = df['hour'].mode()[0]
     print('Most common hour is:', end=' ')
-    print(str(most_common_hour - 12) + ":00 PM" if most_common_hour > 12 else str(most_common_hour) + ":00 AM")
+    print(
+        str(most_common_hour - 12) + ":00 PM"
+        if most_common_hour > 12 else str(most_common_hour) + ":00 AM")
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
@@ -268,7 +304,9 @@ def station_stats(df):
     print(df['End Station'].mode()[0])
 
     # display most frequent combination of start station and end station trip
-    start_station_most_freq, stop_station_most_freq = df.groupby(['Start Station', 'End Station']).size().sort_values(ascending=False).index.values[0]
+    start_station_most_freq, stop_station_most_freq = df.groupby(
+        ['Start Station',
+         'End Station']).size().sort_values(ascending=False).index.values[0]
     print('Most frequent combination of start and stop station is: (', end=' ')
     print(start_station_most_freq + ' , ' + stop_station_most_freq, end=' ')
     print(')')
@@ -324,31 +362,88 @@ def user_stats(df):
     print('-' * 40)
 
 
+def plot_grouped_bar3(r1,
+                      values,
+                      colors,
+                      labels,
+                      xticks,
+                      x_ax_label,
+                      y_ax_label,
+                      width=0.15,
+                      display_val_over_bar=True,
+                      xticks_rot=90):
+    ax = plt.subplot
+    r2 = [x + width for x in r1]
+    r3 = [x + width for x in r2]
+    ax = plt.subplot()
+    ax.bar(r1, values[0], color=colors[0], width=width, label=labels[0])
+    ax.bar(r2, values[1], color=colors[1], width=width, label=labels[1])
+    ax.bar(r3, values[2], color=colors[2], width=width, label=labels[2])
+    plt.xticks(
+        [r + width for r in range(len(r1))], xticks, rotation=xticks_rot)
+    ax.legend()
+    plt.xlabel(x_ax_label)
+    plt.ylabel(y_ax_label)
+
+    if display_val_over_bar:
+        ytick_label, _ = plt.yticks()
+        height = ytick_label[len(ytick_label) - 1] / len(ytick_label) / 5
+        for i, val in enumerate(values[0]):
+            val = int(val)
+            if val == 0:
+                continue
+
+            plt.annotate(
+                val, (r1[i], val + height),
+                xytext=(0, 0),
+                textcoords="offset points",
+                va='center',
+                ha='center')
+        for i, val in enumerate(values[1]):
+            val = int(val)
+            if val == 0:
+                continue
+
+            plt.annotate(
+                val, (r2[i], val + height),
+                xytext=(0, 0),
+                textcoords="offset points",
+                va='center',
+                ha='center')
+        for i, val in enumerate(values[2]):
+            val = int(val)
+            if val == 0:
+                continue
+
+            plt.annotate(
+                val, (r3[i], val + height),
+                xytext=(0, 0),
+                textcoords="offset points",
+                va='center',
+                ha='center')
+    ax.autoscale_view()
+    plt.show()
+
+
 def visualize_user_types_in_city(df):
     df_temp = df.groupby(['City'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
-    barWidth = 0.25
-    r1 = df_temp.index.values
-    r2 = [x + barWidth for x in r1]
-    r3 = [x + barWidth for x in r2]
-    ax = plt.subplot()
-
-    ax.bar(r1, df_temp['Customer'].values, color='blue', width=barWidth, edgecolor='white', label='Customer')
-    ax.bar(r2, df_temp['Dependent'].values, color='red', width=barWidth, edgecolor='white', label='Dependent')
-    ax.bar(r3, df_temp['Subscriber'].values, color='green', width=barWidth, edgecolor='white', label='Subscriber')
-    plt.xticks([r + barWidth for r in range(len(r1))], df_temp['City'].values)
-    ax.legend()
-
-    for i, val in enumerate(df_temp['Customer'].values):
-        plt.annotate(val, (r1[i], val + 2), xytext=(0, 5), textcoords="offset points", va='center', ha='center')
-    for i, val in enumerate(df_temp['Dependent'].values):
-        plt.annotate(val, (r2[i], val + 2), xytext=(0, 5), textcoords="offset points", va='center', ha='center')
-    for i, val in enumerate(df_temp['Subscriber'].values):
-        plt.annotate(val, (r3[i], val + 2), xytext=(0, 5), textcoords="offset points", va='center', ha='center')
-
-    ax.autoscale_view()
-    plt.show()
-    # df_temp.plot.bar(x='City', y=['Customer', 'Dependent', 'Subscriber'])
+    df_temp = df_temp.fillna(0)
+    print(df_temp)
+    df_temp.loc[df_temp['City'] == 'C', 'City'] = 'Chicago'
+    df_temp.loc[df_temp['City'] == 'W', 'City'] = 'Washington'
+    df_temp.loc[df_temp['City'] == 'N', 'City'] = 'New York City'
+    print('jds')
+    print(df_temp)
+    plot_grouped_bar3(
+        df_temp.index.values, [
+            df_temp['Customer'].values, df_temp['Dependent'].values,
+            df_temp['Subscriber'].values
+        ], ['red', 'green', 'blue'], ['Customer', 'Dependent', 'Subscriber'],
+        df_temp['City'].values,
+        xticks_rot=0,
+        x_ax_label='Cities',
+        y_ax_label='Number of users')
     return
 
 
@@ -361,55 +456,104 @@ def visualize_user_types_birth_year(df):
 
 def visualize_user_counts_day_wise(df):
     df['day_in_month'] = df['Start Time'].dt.day
-    df_temp = df.groupby(['day_in_month', 'month', 'day_of_week', 'day_of_week_num'])['User Type'].value_counts()
+    df_temp = df.groupby(
+        ['day_in_month', 'month', 'day_of_week',
+         'day_of_week_num'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=4).reset_index().rename_axis(None, axis=1)
     df_temp = df_temp.groupby('day_of_week').mean().fillna(0)
-    df_temp.sort_values('day_of_week_num', inplace=True)
-    ax = plt.subplot()
-    print(df)
-    plt.plot(df_temp.index.values, df_temp['Customer'].values, color='blue', label='Customer')
-    plt.plot(df_temp.index.values, df_temp['Dependent'].values, color='red', label='Dependent')
-    plt.plot(df_temp.index.values, df_temp['Subscriber'].values, color='green', label='Subscriber')
 
-    ax.legend()
-    ax.autoscale_view()
-    plt.show()
+    df_temp.reset_index(inplace=True)
+
+    for i, day in enumerate(days_helper_list):
+        if day not in df_temp.day_of_week.values:
+            df_temp.loc[df_temp.shape[0]] = [
+                day, None, None, i, None, None, None
+            ]
+    df_temp.sort_values('day_of_week_num', inplace=True)
+    df_temp = df_temp.fillna(0).reset_index()
+    plot_grouped_bar3(
+        df_temp.index.values, [
+            df_temp['Customer'].values, df_temp['Dependent'].values,
+            df_temp['Subscriber'].values
+        ], ['red', 'green', 'blue'], ['Customer', 'Dependent', 'Subscriber'],
+        df_temp['day_of_week'].values,
+        display_val_over_bar=False,
+        x_ax_label='Days',
+        y_ax_label='Average number of users')
 
 
 def visualize_user_counts_month_wise(df):
     df_temp = df.groupby('month')['User Type'].value_counts()
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
+    for month in range(len(month_helper_list)):
+        if (month + 1) not in df_temp.month.values:
+            df_temp.loc[df_temp.shape[0]] = [month + 1, None, None, None]
+    df_temp.sort_values('month', inplace=True)
+    df_temp['month'] = df_temp['month'].apply(int)
+    df_temp = df_temp.fillna(0).reset_index()
     print(df_temp)
-    ax = plt.subplot()
+    plot_grouped_bar3(
+        df_temp.month.values - 1, [
+            df_temp['Customer'].values, df_temp['Dependent'].values,
+            df_temp['Subscriber'].values
+        ], ['red', 'green', 'blue'], ['Customer', 'Dependent', 'Subscriber'],
+        month_helper_list,
+        width=0.25,
+        display_val_over_bar=False,
+        x_ax_label='Months',
+        y_ax_label='Number of users')
 
-    plt.plot(df_temp['month'].values, df_temp['Customer'].values, color='blue', label='Customer')
-    plt.plot(df_temp['month'].values, df_temp['Dependent'].values, color='red', label='Dependent')
-    plt.plot(df_temp['month'].values, df_temp['Subscriber'].values, color='green', label='Subscriber')
 
-    plt.xticks(list(range(len(month_helper_list))), month_helper_list)
-    ax.legend()
-    ax.autoscale_view()
-    plt.show()
+def visualize_user_counts_hour_wise(df):
+    df['day_in_month'] = df['Start Time'].dt.day
+    df_temp = df.groupby(['day_in_month', 'month',
+                          'hour'])['User Type'].value_counts()
+    df_temp = df_temp.unstack(level=3).reset_index().rename_axis(None, axis=1)
+    df_temp = df_temp.groupby('hour').mean().fillna(0)
+    df_temp.reset_index(inplace=True)
+    hours = list(range(24))
+    for i, hour in enumerate(hours):
+        if hour not in df_temp.hour.values:
+            df_temp.loc[df_temp.shape[0]] = [
+                hour, None, None, None, None, None
+            ]
+    df_temp.sort_values('hour', inplace=True)
+    df_temp = df_temp.fillna(0).reset_index()
+    plot_grouped_bar3(
+        df_temp.hour.values, [
+            df_temp['Customer'].values, df_temp['Dependent'].values,
+            df_temp['Subscriber'].values
+        ], ['red', 'green', 'blue'], ['Customer', 'Dependent', 'Subscriber'],
+        hours,
+        display_val_over_bar=False,
+        x_ax_label='Hours',
+        y_ax_label='Average number of users')
 
 
 def visualize_data(df):
     phase = 'Data Visualization'
-    choice = input('\n\nWould you like to visualize the data? We have some awesome predefined visualizations!!(yes/no)')
+    choice = input(
+        '\n\nWould you like to visualize the data? We have some awesome predefined visualizations!!(yes/no)'
+    )
     if choice != 'yes':
         return
-    _ = input('Press Enter to continue!!..Warning screen will be cleared once a key is pressed!!')
+    _ = input(
+        'Press Enter to continue!!..Warning screen will be cleared once a key is pressed!!'
+    )
     printFiltersFormatted(phase)
     while True:
         print('Here are some awesome visualizations:')
         print('\t1. User Count level')
         print('\t2. User Type level')
         print('\t3. To exit')
-        print('\nType in "desc 1" for description of choice 1, "desc 2" for choice 2\n\tor\nSimply type 1 to select choice 1')
+        print(
+            '\nType in "desc 1" for description of choice 1, "desc 2" for choice 2\n\tor\nSimply type 1 to select choice 1'
+        )
         print("\nPS: Don't include quotations")
         choice = input('Enter your choice: ')
         options = ['desc 1', 'desc 2', '1', '2', '3']
         choice = choice.lower()
-        if(choice not in options):
+        if (choice not in options):
             printFiltersFormatted(phase)
             print('ERROR'.center(size, '+'))
             print('Incorrect choice!'.center(size, ' '))
@@ -418,8 +562,9 @@ def visualize_data(df):
             print(''.center(size, '+'))
             print('\n\n')
         elif options.index(choice) < 2:
-            if(options.index(choice) == 0):
-                print('Visualize user counts Month wise, Day wise, Hour wise!!')
+            if (options.index(choice) == 0):
+                print(
+                    'Visualize user counts Month wise, Day wise, Hour wise!!')
             else:
                 print('Visualize user types city wise!!')
             _ = input('Press Enter to continue!!..')
@@ -430,7 +575,9 @@ def visualize_data(df):
                 filters_used['VISUAL'].append('User Count')
                 printFiltersFormatted(phase)
                 while True:
-                    print('Choose from one below:\n1. Month wise\n2. Day wise\n3. Hour wise\n4. To exit visualization')
+                    print(
+                        'Choose from one below:\n1. Month wise\n2. Day wise\n3. Hour wise\n4. To exit visualization'
+                    )
                     choice_2 = input('Enter your choice (1 or 2 or 3 or 4): ')
                     if choice_2 == '1':
                         filters_used['VISUAL_SUB'].append('Month wise')
@@ -445,8 +592,12 @@ def visualize_data(df):
                         filters_used['VISUAL_SUB'] = []
                         printFiltersFormatted(phase)
                     elif choice_2 == '3':
-                        # write function
-                        break
+                        filters_used['VISUAL_SUB'].append('Hour wise')
+                        printFiltersFormatted(phase)
+                        visualize_user_counts_hour_wise(df)
+                        filters_used['VISUAL_SUB'] = []
+                        printFiltersFormatted(phase)
+
                     elif choice_2 == '4':
                         filters_used['VISUAL'] = []
                         printFiltersFormatted(phase)
@@ -454,7 +605,9 @@ def visualize_data(df):
                     else:
                         printFiltersFormatted(phase)
                         print('ERROR'.center(size, '+'))
-                        print('Incorrect choice!!.. Please enter 1 or 2 or 3 or 4'.center(size, ' '))
+                        print(
+                            'Incorrect choice!!.. Please enter 1 or 2 or 3 or 4'.
+                            center(size, ' '))
                         print(''.center(size, '+'))
                         print('\n\n')
             if options.index(choice) == 3:
@@ -475,8 +628,10 @@ def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
-        if not(df.empty):
-            print('\nWish to see the raw data? Hit "Enter" to see and "No" to move on!!')
+        if not (df.empty):
+            print(
+                '\nWish to see the raw data? Hit "Enter" to see and "No" to move on!!'
+            )
             ch1 = input('Enter Choice:')
             if ch1 == '':
                 print(df.head())
@@ -504,7 +659,9 @@ def main():
         else:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
-            print('Unfortunately no data was found for the above chosen filters!!'.center(size, ' '))
+            print(
+                'Unfortunately no data was found for the above chosen filters!!'.
+                center(size, ' '))
             print(''.center(size, '+'))
         print('\n')
         print('=' * size)
@@ -516,9 +673,17 @@ def main():
             clear()
             clear()
             print('Successful exit!'.center(size, '-'))
-            print('Thanks for using this tool!! Hope you gained some insight on the data')
+            print(
+                'Thanks for using this tool!! Hope you gained some insight on the data'
+            )
             break
-        filters_used = {'CITY': [], 'MONTH': [], 'DAY': [], 'VISUAL': [], 'VISUAL_SUB': []}
+        filters_used = {
+            'CITY': [],
+            'MONTH': [],
+            'DAY': [],
+            'VISUAL': [],
+            'VISUAL_SUB': []
+        }
         clear()
         clear()
         clear()
