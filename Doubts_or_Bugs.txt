@@ -1,0 +1,27 @@
+1. Check the unnamed column in the data.->No need (index column)
+2. Check the display filter method(Not displaying previously chosen filters correctly if one is entered incorrectly) -> Resolved
+3. Verify results via custom df -> Resolved
+4. Add city column while concatanation -> Resolved
+5. No data for some months!!. Check that the code works!! -> Resolved
+6. Check visualization when city filter is added***********************************
+7. add show data head() to show the data. -> Resolved
+8. add axis labels ->Resolved
+
+
+ER: add comma separated input for city,month and day
+
+
+Bug: failing for december month where data does not exit -> resolved
+
+
+-----Testing------
+->Testing if stats are correctly calculated->Check again
+    ->With all cities
+    ->With one city
+    -> Comma separated combinations of city, month and days
+->Check all the visualizations again.
+    ->With all cities
+    ->With one city
+->Test for different inputs(invalid inputs)
+->CSV inputs(all cases with verify data from dataframe)
+-> Check for correct filtering
