@@ -723,6 +723,7 @@ def main():
             print('Exiting!!')
             return
         if not (df.empty):
+            log(df)
             print(
                 '\nWish to see the raw data? Hit "Enter" to see and "No" to move on!!'
             )
@@ -796,7 +797,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         if sys.argv[1] == 'test':
             run_mode = sys.argv[1]
-            CITY_DATA = {'chicago': 'test_data/chicago_test.csv',
-                         'new york city': 'test_data/new_york_test.csv',
-                         'washington': 'test_data/washington_test.csv'}
+            CITY_DATA = {'chicago': 'test_data/chicago.csv',
+                         'new york city': 'test_data/new_york_city.csv',
+                         'washington': 'test_data/washington.csv'}
     main()
