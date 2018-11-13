@@ -5,16 +5,10 @@ import datetime
 from os import system, name
 import matplotlib.pyplot as plt
 
-# CITY_DATA = {
-#     'chicago': 'test_data/chicago_test.csv',
-#     'new york city': 'test_data/new_york_test.csv',
-#     'washington': 'test_data/washington_test.csv'
-# }
-CITY_DATA = {
-    'chicago': 'chicago.csv',
-    'new york city': 'new_york_city.csv',
-    'washington': 'washington.csv'
-}
+
+CITY_DATA = {'chicago': 'chicago.csv',
+             'new york city': 'new_york_city.csv',
+             'washington': 'washington.csv'}
 
 info_codes = ['SEVERITY_ERROR', 'CONTINUE_GRACEFULLY']
 
@@ -195,7 +189,7 @@ def get_filters():
         month = month.upper()
         is_comma_separated = False
         message, is_comma_separated_month = validateInputs('MONTH', month, month_helper_list)
-        if message == info_codes[0]:
+        if type(message) is str and message == info_codes[0]:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
             print(
@@ -203,7 +197,7 @@ def get_filters():
                 center(size, ' '))
             print(''.center(size, '+'))
             print('\n\n')
-        elif message == info_codes[1]:
+        elif type(message) is str and message == info_codes[1]:
             print('Running without any filter on month')
             month = None
             filters_used['MONTH'].append('ALL')
@@ -230,11 +224,12 @@ def get_filters():
         )
         print('\nYou can also enter comma separated values(example:Mon,Tue)')
         print(days_helper_list)
+        print('\nYou can also enter comma separated values(example:Mon,Tue)')
         day = input("\nEnter day: ")
         day = day.upper()
         is_comma_separated = False
         message, is_comma_separated_day = validateInputs('DAY', day, days_helper_list)
-        if message == info_codes[0]:
+        if type(message) is str and message == info_codes[0]:
             printFiltersFormatted()
             print('ERROR'.center(size, '+'))
             print(
@@ -242,7 +237,7 @@ def get_filters():
                 center(size, ' '))
             print(''.center(size, '+'))
             print('\n\n')
-        elif message == info_codes[1]:
+        elif type(message) is str and message == info_codes[1]:
             print('Running without any filter on day')
             day = None
             filters_used['DAY'].append('ALL')
@@ -496,12 +491,10 @@ def visualize_user_types_in_city(df):
     df_temp = df.groupby(['City'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
     df_temp = df_temp.fillna(0)
-    print(df_temp)
+    # print(df_temp)
     df_temp.loc[df_temp['City'] == 'C', 'City'] = 'Chicago'
     df_temp.loc[df_temp['City'] == 'W', 'City'] = 'Washington'
     df_temp.loc[df_temp['City'] == 'N', 'City'] = 'New York City'
-    print('jds')
-    print(df_temp)
     plot_grouped_bar3(
         df_temp.index.values, [
             df_temp['Customer'].values, df_temp['Dependent'].values,
@@ -558,7 +551,7 @@ def visualize_user_counts_month_wise(df):
     df_temp.sort_values('month', inplace=True)
     df_temp['month'] = df_temp['month'].apply(int)
     df_temp = df_temp.fillna(0).reset_index()
-    print(df_temp)
+    # print(df_temp)
     plot_grouped_bar3(
         df_temp.month.values - 1, [
             df_temp['Customer'].values, df_temp['Dependent'].values,
