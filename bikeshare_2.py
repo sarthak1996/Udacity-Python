@@ -36,6 +36,11 @@ run_mode = 'main'
 
 
 def clear():
+    '''
+    Function that clears the screen
+    Args: None
+    Returns: Nothing
+    '''
     # for windows
     if name == 'nt':
         _ = system('cls')
@@ -47,6 +52,12 @@ def clear():
 
 
 def printFiltersFormatted(phase='Filter Data'):
+    '''
+    Function to print formatted filters on top of terminal
+    Args: (str) Phase -> displays which phase the code is going through
+                    Expected values: Filter Data, Data Visualization, Load data
+    Returns: Nothing
+    '''
     clear()
     clear()
     clear()
@@ -74,6 +85,16 @@ def printFiltersFormatted(phase='Filter Data'):
 
 
 def validateInputs(mode, value, validation_list=None):
+    '''
+        Function to validate input by user for city, month and day
+        Args: (str) mode - determines which validation is fired
+                    Expected values: CITY,MONTH,DAY
+              (str) value - value entered by user
+              (list) validation_list - validation list if values are comma separated
+        Returns:
+            message -> One element of info_codes or comma separated values, or correct value for user input
+            (boolean) is_comma_separated -> If the input is comma separated
+    '''
     global is_comma_separated
     value, is_comma_separated = validate_comma_separated_values(value, validation_list)
     if type(value) is str and value == info_codes[0]:
@@ -104,6 +125,11 @@ def validateInputs(mode, value, validation_list=None):
 
 
 def format_city_name(city):
+    '''
+    Prints city with first letter of every word capitalised with some additional formatting
+    Args: (str/list) city: any string or list
+    Returns: (str) every word's first letter capitalized string
+    '''
     if type(city) is not str:
         city = '_,_'.join(city).replace('[', '').replace('{', '').replace(
             ']', '').replace('}', '')
@@ -115,6 +141,14 @@ def format_city_name(city):
 
 
 def validate_comma_separated_values(values, validation_list):
+    '''
+    Function to check if values are comma separated and valid inputs.
+    Args : (str) values: comma separated values
+           (list) validation_list: list to check if values are valid
+    Return:
+        (list/str) An element from info_codes or list of values or value itself if not comma separated
+        (boolean) if values is comma separated and valid
+    '''
     validation_list = set(validation_list)
     if ',' in values:
         values = values.split(',')
@@ -446,6 +480,19 @@ def plot_grouped_bar3(r1,
                       width=0.15,
                       display_val_over_bar=True,
                       xticks_rot=90):
+    '''
+    Function to plot a bar graph which has 3 bars in one group.
+    Args: (list) r1 -> numeric values on x
+          (list) values -> values on y
+          (list) colors -> colors for the bars
+          (list) xticks -> x-tick labels
+          (str) x_ax_label -> x axis label
+          (str) y_ax_label -> y axis label
+          (float) width -> width of bar
+          (boolean) display_val_over_bar -> boolean to toggle display of value of bar over bar
+          (float) xticks_rot -> rotation of xtick labels in degrees
+    Returns: Nothing
+    '''
     ax = plt.subplot
     r2 = [x + width for x in r1]
     r3 = [x + width for x in r2]
@@ -500,6 +547,9 @@ def plot_grouped_bar3(r1,
 
 
 def visualize_user_types_in_city(df):
+    '''
+    Plot graph between total number of user types and city
+    '''
     df_temp = df.groupby(['City'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
     df_temp = df_temp.fillna(0)
@@ -520,14 +570,10 @@ def visualize_user_types_in_city(df):
     return
 
 
-# def visualize_user_types_birth_year(df):
-#     df_temp = df.groupby(['Birth Year'])['User Type'].value_counts()
-#     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
-
-#     return
-
-
 def visualize_user_counts_day_wise(df):
+    '''
+    Plot graph between average number of user types on days
+    '''
     df['day_in_month'] = df['Start Time'].dt.day
     df_temp = df.groupby(
         ['day_in_month', 'month', 'day_of_week',
@@ -557,6 +603,9 @@ def visualize_user_counts_day_wise(df):
 
 
 def visualize_user_counts_month_wise(df):
+    '''
+    Plot graph between total number of user types in months
+    '''
     df_temp = df.groupby('month')['User Type'].value_counts()
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
     for month in range(len(month_helper_list)):
@@ -580,6 +629,9 @@ def visualize_user_counts_month_wise(df):
 
 
 def visualize_user_counts_hour_wise(df):
+    '''
+    Plot graph between average number of user types at hours
+    '''
     df['day_in_month'] = df['Start Time'].dt.day
     df_temp = df.groupby(['day_in_month', 'month',
                           'hour'])['User Type'].value_counts()
@@ -607,6 +659,9 @@ def visualize_user_counts_hour_wise(df):
 
 
 def visualize_data(df):
+    '''
+    Function to call all the visualization functions with input handling
+    '''
     phase = 'Data Visualization'
     choice = input(
         '\n\nWould you like to visualize the data? We have some awesome predefined visualizations!!(yes/no)'
