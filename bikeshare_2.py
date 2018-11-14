@@ -181,7 +181,6 @@ def get_filters():
             'Enter a city for which you would like to filter the data\n1. C for Chicago\n2. N for New York\n3. W for Washington,\n4. Hit enter (to disable filtering)\nYou can also enter comma separated values(example:C,N)\n\nPS: Case sensitivity has been disabled!\n\nEnter city: '
         )
         city = city.upper()
-        is_comma_separated = False
         message, is_comma_separated_city = validateInputs('CITY', city, list(city_helper_dict.keys()))
 
         if type(message) is str and message == info_codes[0]:
@@ -199,7 +198,7 @@ def get_filters():
             printFiltersFormatted()
             break
         else:
-            if is_comma_separated:
+            if is_comma_separated_city:
                 print('Using ' + format_city_name(message) + ' as city...')
                 city = message
                 for c in city:
@@ -220,7 +219,6 @@ def get_filters():
         print(month_helper_list)
         month = input('\nEnter month: ')
         month = month.upper()
-        is_comma_separated = False
         message, is_comma_separated_month = validateInputs('MONTH', month, month_helper_list)
         if type(message) is str and message == info_codes[0]:
             printFiltersFormatted()
@@ -237,7 +235,7 @@ def get_filters():
             printFiltersFormatted()
             break
         else:
-            if is_comma_separated:
+            if is_comma_separated_month:
                 print('Using ' + format_city_name(message) + ' as month...')
                 for m in message:
                     print(m)
@@ -260,7 +258,6 @@ def get_filters():
         print('\nYou can also enter comma separated values(example:Mon,Tue)')
         day = input("\nEnter day: ")
         day = day.upper()
-        is_comma_separated = False
         message, is_comma_separated_day = validateInputs('DAY', day, days_helper_list)
         if type(message) is str and message == info_codes[0]:
             printFiltersFormatted()
@@ -277,7 +274,7 @@ def get_filters():
             printFiltersFormatted()
             break
         else:
-            if is_comma_separated:
+            if is_comma_separated_day:
                 print('Using ' + format_city_name(message) + ' as day...')
                 for d in message:
                     filters_used['DAY'].append(d)
@@ -348,19 +345,27 @@ def load_data(city, month, day):
 
     if month is not None:
         if is_comma_separated_month:
+            log('Inside month filter loop.')
             for month_alpha in month:
+                log(month_alpha)
                 df.loc[df['month'] == month_alpha + 1, 'is_included_in_filters'] = 1
         else:
             df = df[df.month == month]
-
+    if is_comma_separated_month:
+        df = df[df.is_included_in_filters == 1]
+        df['is_included_in_filters'] = 0
+    log(df)
     if day is not None:
         if is_comma_separated_day:
+            log('Inside day filter loop.')
             for day_alpha in day:
+                log(day_alpha)
                 df.loc[df['day_of_week'] == day_alpha, 'is_included_in_filters'] = 1
+
         else:
             df = df[df.day_of_week == day]
-
-    if is_comma_separated_month or is_comma_separated_day:
+    log(df)
+    if is_comma_separated_day:
         df = df[df.is_included_in_filters == 1]
     log('After month and day filter')
     log(df.month.value_counts())
@@ -370,6 +375,14 @@ def load_data(city, month, day):
     print('Done!..Loading data completed without any errors')
     print('')
     _ = input('Press enter to continue..')
+    # log(df)
+    df.reset_index(inplace=True)
+    # log('After reset_index')
+    # log(df)
+    df.drop('index', inplace=True, axis='columns')
+    # log('After index column drop')
+    # log(df)
+    log(None, wait=True)
     return df
 
 
@@ -834,6 +847,11 @@ def main():
             'VISUAL': [],
             'VISUAL_SUB': []
         }
+        is_comma_separated = False
+        is_comma_separated_city = False
+        is_comma_separated_day = False
+        is_comma_separated_month = False
+
         clear()
         clear()
         clear()
