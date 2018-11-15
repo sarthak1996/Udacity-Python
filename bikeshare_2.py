@@ -428,6 +428,7 @@ def station_stats(df):
     start_station_most_freq, stop_station_most_freq = df.groupby(
         ['Start Station',
          'End Station']).size().sort_values(ascending=False).index.values[0]
+
     print('Most frequent combination of start and stop station is: (', end=' ')
     print(start_station_most_freq + ' , ' + stop_station_most_freq, end=' ')
     print(')')
@@ -462,6 +463,7 @@ def user_stats(df):
     # Display counts of user types
     print('Stats for User Types in the data'.center(size, '='))
     print()
+
     print(df['User Type'].value_counts().to_string())
     # Display counts of gender
     print('\n')
@@ -472,6 +474,7 @@ def user_stats(df):
     now = datetime.datetime.now()
     print('\n')
     print('Stats for Birth year in the data'.center(size, '='))
+    log(df)
     print('\nEarliest birth year in the data is:', end=' ')
     print(str(df['Birth Year'].min()))
     print('Most recent birth year in the data is:', end=' ')
@@ -679,7 +682,7 @@ def visualize_data(df):
     choice = input(
         '\n\nWould you like to visualize the data? We have some awesome predefined visualizations!!(yes/no)'
     )
-    if choice != 'yes':
+    if choice.lower() != 'yes':
         return
     print('[WARNING]: Visualization with filters would lead to filtered out values to be defaulted to 0!!')
     _ = input(
@@ -851,7 +854,7 @@ def main():
         is_comma_separated_city = False
         is_comma_separated_day = False
         is_comma_separated_month = False
-
+        df = None
         clear()
         clear()
         clear()
