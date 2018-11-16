@@ -6,7 +6,7 @@
 5. City - csv, month -chosen, day -chosen
 6. City - csv, month -chosen, day- csv
 7. City - csv, month -csv, day-chosen
-8. City - csv, month-csv, day-csv .
+8. City - csv, month-csv, day-csv
 ---PASSED
 
 ***Stat Test***
