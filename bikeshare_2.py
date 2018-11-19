@@ -728,7 +728,7 @@ def visualize_data(df):
             printFiltersFormatted(phase)
             print('ERROR'.center(size, '+'))
             print('Incorrect choice!'.center(size, ' '))
-            print('Please choose from options below'.center(size, ' '))
+            print('Please choose from options below:'.center(size, ' '))
             print(str(options).center(size, ' '))
             print(''.center(size, '+'))
             print('\n\n')
