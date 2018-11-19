@@ -575,7 +575,7 @@ def visualize_user_types_in_city(df):
     df_temp.loc[df_temp['City'] == 'W', 'City'] = 'Washington'
     df_temp.loc[df_temp['City'] == 'N', 'City'] = 'New York City'
     log(df_temp)
-    for i in ['Customer', 'Dependent', 'Subscriber']:
+    for i in ['Customer', 'Dependent', 'Subscriber', 'Unknown']:
         if i not in df_temp.columns:
             df_temp[i] = 0
     plot_grouped_bar3(
@@ -617,7 +617,7 @@ def visualize_user_counts_day_wise(df):
     log(df_temp)
 
     df_temp.reset_index(inplace=True)
-    for i in ['Customer', 'Dependent', 'Subscriber']:
+    for i in ['Customer', 'Dependent', 'Subscriber', 'Unknown']:
         if i not in df_temp.columns:
             df_temp[i] = 0
     for i, day in enumerate(days_helper_list):
@@ -648,13 +648,13 @@ def visualize_user_counts_month_wise(df):
     df['User Type'] = df['User Type'].fillna('Unknown')
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
     log(df_temp)
-    for i in ['Customer', 'Dependent', 'Subscriber']:
+    for i in ['Customer', 'Dependent', 'Subscriber', 'Unknown']:
         if i not in df_temp.columns:
             df_temp[i] = 0
     log(df_temp)
     for month in range(len(month_helper_list)):
         if (month + 1) not in df_temp.month.values:
-            df_temp.loc[df_temp.shape[0]] = [month + 1, None, None, None]
+            df_temp.loc[df_temp.shape[0]] = [month + 1, None, None, None, None]
     df_temp.sort_values('month', inplace=True)
     df_temp['month'] = df_temp['month'].apply(int)
     df_temp = df_temp.fillna(0).reset_index()
@@ -694,7 +694,7 @@ def visualize_user_counts_hour_wise(df):
     df_temp.reset_index(inplace=True)
     hours = list(range(24))
     log(df_temp)
-    for i in ['Customer', 'Dependent', 'Subscriber']:
+    for i in ['Customer', 'Dependent', 'Subscriber', 'Unknown']:
         if i not in df_temp.columns:
             df_temp[i] = 0
     for i, hour in enumerate(hours):
