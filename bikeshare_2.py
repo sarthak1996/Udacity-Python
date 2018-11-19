@@ -599,7 +599,7 @@ def visualize_user_counts_day_wise(df):
     total_day_count_df.columns = list(range(len(total_day_count_df.columns)))
     total_day_count_df.set_index(0, inplace=True)
     total_day_count_df = total_day_count_df.gt(0).sum(axis='columns')
-
+    total_day_count_df.index.name='day_of_week'
     df_temp = df.groupby(
         ['day_in_month', 'month', 'day_of_week',
          'day_of_week_num'])['User Type'].value_counts()
@@ -667,7 +667,7 @@ def visualize_user_counts_hour_wise(df):
     total_hour_count_df.columns = list(range(len(total_hour_count_df.columns)))
     total_hour_count_df.set_index(0, inplace=True)
     total_hour_count_df = total_hour_count_df.gt(0).sum(axis='columns')
-
+    total_hour_count_df.index.name = 'hour'
     df['day_in_month'] = df['Start Time'].dt.day
     df_temp = df.groupby(['day_in_month', 'month',
                           'hour'])['User Type'].value_counts()
@@ -684,7 +684,9 @@ def visualize_user_counts_hour_wise(df):
     log(df_temp)
     log(total_hour_count_df)
     df_temp = df_temp.div(total_hour_count_df, axis=0).fillna(0)
+    log(df_temp)
     df_temp = df_temp.fillna(0).reset_index()
+    log(df_temp)
     df_temp.sort_values('hour', inplace=True)
 
     log(df_temp)
