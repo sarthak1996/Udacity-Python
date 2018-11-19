@@ -629,10 +629,6 @@ def visualize_user_counts_day_wise(df):
     df_temp = df_temp.fillna(0).reset_index()
     log(df_temp)
 
-    for i in ['Customer', 'Dependent', 'Subscriber']:
-        if i not in df_temp.columns:
-            df_temp[i] = 0
-
     plot_grouped_bar3(
         df_temp.index.values, [
             df_temp['Customer'].values, df_temp['Dependent'].values,
@@ -698,6 +694,9 @@ def visualize_user_counts_hour_wise(df):
     df_temp.reset_index(inplace=True)
     hours = list(range(24))
     log(df_temp)
+    for i in ['Customer', 'Dependent', 'Subscriber']:
+        if i not in df_temp.columns:
+            df_temp[i] = 0
     for i, hour in enumerate(hours):
         if hour not in df_temp.hour.values:
             df_temp.loc[df_temp.shape[0]] = [
@@ -713,9 +712,7 @@ def visualize_user_counts_hour_wise(df):
     df_temp.sort_values('hour', inplace=True)
 
     log(df_temp)
-    for i in ['Customer', 'Dependent', 'Subscriber']:
-        if i not in df_temp.columns:
-            df_temp[i] = 0
+
     plot_grouped_bar3(
         df_temp.hour.values, [
             df_temp['Customer'].values, df_temp['Dependent'].values,
