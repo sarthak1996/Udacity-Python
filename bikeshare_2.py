@@ -680,11 +680,13 @@ def visualize_user_counts_hour_wise(df):
             df_temp.loc[df_temp.shape[0]] = [
                 hour, None, None, None, None, None
             ]
-    df_temp.sort_values('hour', inplace=True)
-    df_temp = df_temp.fillna(0).reset_index()
+    df_temp.set_index('hour', inplace=True)
     log(df_temp)
     log(total_hour_count_df)
     df_temp = df_temp.div(total_hour_count_df, axis=0).fillna(0)
+    df_temp = df_temp.fillna(0).reset_index()
+    df_temp.sort_values('hour', inplace=True)
+
     log(df_temp)
     plot_grouped_bar3(
         df_temp.hour.values, [
