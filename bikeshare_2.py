@@ -591,11 +591,24 @@ def visualize_user_counts_day_wise(df):
     Plot graph between average number of user types on days
     '''
     df['day_in_month'] = df['Start Time'].dt.day
+
+    # assumption data is provided for all days
+    # Average is taken on the data provided not the actual days between min(start_time) and max(end_time)
+    total_day_count_df = df.groupby(['day_of_week', 'month', 'day_in_month'])['day_of_week'].count()
+    total_day_count_df = total_day_count_df.unstack(level=[1, 2]).reset_index().fillna(0)
+    total_day_count_df.columns = list(range(len(total_day_count_df.columns)))
+    total_day_count_df.set_index(0, inplace=True)
+    total_day_count_df = total_day_count_df.gt(0).sum(axis='columns')
+
     df_temp = df.groupby(
         ['day_in_month', 'month', 'day_of_week',
          'day_of_week_num'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=4).reset_index().rename_axis(None, axis=1)
-    df_temp = df_temp.groupby('day_of_week').mean().fillna(0)
+    df_temp = df_temp.groupby('day_of_week').sum()
+    log(df_temp)
+    log(total_day_count_df)
+    df_temp = df_temp.div(total_day_count_df, axis=0).fillna(0)
+    log(df_temp)
 
     df_temp.reset_index(inplace=True)
 
@@ -649,10 +662,17 @@ def visualize_user_counts_hour_wise(df):
     Plot graph between average number of user types at hours
     '''
     df['day_in_month'] = df['Start Time'].dt.day
+    total_hour_count_df = df.groupby(['hour', 'month', 'day_in_month'])['hour'].count()
+    total_hour_count_df = total_hour_count_df.unstack(level=[1, 2]).reset_index().fillna(0)
+    total_hour_count_df.columns = list(range(len(total_hour_count_df.columns)))
+    total_hour_count_df.set_index(0, inplace=True)
+    total_hour_count_df = total_hour_count_df.gt(0).sum(axis='columns')
+
+    df['day_in_month'] = df['Start Time'].dt.day
     df_temp = df.groupby(['day_in_month', 'month',
                           'hour'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=3).reset_index().rename_axis(None, axis=1)
-    df_temp = df_temp.groupby('hour').mean().fillna(0)
+    df_temp = df_temp.groupby('hour').sum().fillna(0)
     df_temp.reset_index(inplace=True)
     hours = list(range(24))
     for i, hour in enumerate(hours):
@@ -662,6 +682,9 @@ def visualize_user_counts_hour_wise(df):
             ]
     df_temp.sort_values('hour', inplace=True)
     df_temp = df_temp.fillna(0).reset_index()
+    log(df_temp)
+    log(total_hour_count_df)
+    df_temp = df_temp.div(total_hour_count_df, axis=0).fillna(0)
     log(df_temp)
     plot_grouped_bar3(
         df_temp.hour.values, [
@@ -861,6 +884,9 @@ def main():
 
 
 def log(message, wait=False):
+    '''
+    This method prints or waits till the input is entered only when testing the code
+    '''
     if run_mode == 'test' and wait:
         input(message)
     elif run_mode == 'test':
