@@ -566,6 +566,7 @@ def visualize_user_types_in_city(df):
     '''
     Plot graph between total number of user types and city
     '''
+    df['User Type'] = df['User Type'].fillna('Unknown')
     df_temp = df.groupby(['City'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
     df_temp = df_temp.fillna(0)
@@ -574,6 +575,9 @@ def visualize_user_types_in_city(df):
     df_temp.loc[df_temp['City'] == 'W', 'City'] = 'Washington'
     df_temp.loc[df_temp['City'] == 'N', 'City'] = 'New York City'
     log(df_temp)
+    for i in ['Customer', 'Dependent', 'Subscriber']:
+        if i not in df_temp.columns:
+            df_temp[i] = 0
     plot_grouped_bar3(
         df_temp.index.values, [
             df_temp['Customer'].values, df_temp['Dependent'].values,
@@ -591,7 +595,9 @@ def visualize_user_counts_day_wise(df):
     Plot graph between average number of user types on days
     '''
     df['day_in_month'] = df['Start Time'].dt.day
-
+    log('Inside visualize_user_counts_day_wise')
+    df['User Type'] = df['User Type'].fillna('Unknown')
+    log(df)
     # assumption data is provided for all days
     # Average is taken on the data provided not the actual days between min(start_time) and max(end_time)
     total_day_count_df = df.groupby(['day_of_week', 'month', 'day_in_month'])['day_of_week'].count()
@@ -599,7 +605,7 @@ def visualize_user_counts_day_wise(df):
     total_day_count_df.columns = list(range(len(total_day_count_df.columns)))
     total_day_count_df.set_index(0, inplace=True)
     total_day_count_df = total_day_count_df.gt(0).sum(axis='columns')
-    total_day_count_df.index.name='day_of_week'
+    total_day_count_df.index.name = 'day_of_week'
     df_temp = df.groupby(
         ['day_in_month', 'month', 'day_of_week',
          'day_of_week_num'])['User Type'].value_counts()
@@ -611,15 +617,22 @@ def visualize_user_counts_day_wise(df):
     log(df_temp)
 
     df_temp.reset_index(inplace=True)
-
+    for i in ['Customer', 'Dependent', 'Subscriber']:
+        if i not in df_temp.columns:
+            df_temp[i] = 0
     for i, day in enumerate(days_helper_list):
         if day not in df_temp.day_of_week.values:
             df_temp.loc[df_temp.shape[0]] = [
-                day, None, None, i, None, None, None
+                day, None, None, i, None, None, None, None
             ]
     df_temp.sort_values('day_of_week_num', inplace=True)
     df_temp = df_temp.fillna(0).reset_index()
     log(df_temp)
+
+    for i in ['Customer', 'Dependent', 'Subscriber']:
+        if i not in df_temp.columns:
+            df_temp[i] = 0
+
     plot_grouped_bar3(
         df_temp.index.values, [
             df_temp['Customer'].values, df_temp['Dependent'].values,
@@ -636,7 +649,13 @@ def visualize_user_counts_month_wise(df):
     Plot graph between total number of user types in months
     '''
     df_temp = df.groupby('month')['User Type'].value_counts()
+    df['User Type'] = df['User Type'].fillna('Unknown')
     df_temp = df_temp.unstack(level=1).reset_index().rename_axis(None, axis=1)
+    log(df_temp)
+    for i in ['Customer', 'Dependent', 'Subscriber']:
+        if i not in df_temp.columns:
+            df_temp[i] = 0
+    log(df_temp)
     for month in range(len(month_helper_list)):
         if (month + 1) not in df_temp.month.values:
             df_temp.loc[df_temp.shape[0]] = [month + 1, None, None, None]
@@ -645,6 +664,7 @@ def visualize_user_counts_month_wise(df):
     df_temp = df_temp.fillna(0).reset_index()
     # print(df_temp)
     log(df_temp)
+
     plot_grouped_bar3(
         df_temp.month.values - 1, [
             df_temp['Customer'].values, df_temp['Dependent'].values,
@@ -662,6 +682,7 @@ def visualize_user_counts_hour_wise(df):
     Plot graph between average number of user types at hours
     '''
     df['day_in_month'] = df['Start Time'].dt.day
+    df['User Type'] = df['User Type'].fillna('Unknown')
     total_hour_count_df = df.groupby(['hour', 'month', 'day_in_month'])['hour'].count()
     total_hour_count_df = total_hour_count_df.unstack(level=[1, 2]).reset_index().fillna(0)
     total_hour_count_df.columns = list(range(len(total_hour_count_df.columns)))
@@ -672,13 +693,15 @@ def visualize_user_counts_hour_wise(df):
     df_temp = df.groupby(['day_in_month', 'month',
                           'hour'])['User Type'].value_counts()
     df_temp = df_temp.unstack(level=3).reset_index().rename_axis(None, axis=1)
+
     df_temp = df_temp.groupby('hour').sum().fillna(0)
     df_temp.reset_index(inplace=True)
     hours = list(range(24))
+    log(df_temp)
     for i, hour in enumerate(hours):
         if hour not in df_temp.hour.values:
             df_temp.loc[df_temp.shape[0]] = [
-                hour, None, None, None, None, None
+                hour, None, None, None, None, None, None
             ]
     df_temp.set_index('hour', inplace=True)
     log(df_temp)
@@ -690,6 +713,9 @@ def visualize_user_counts_hour_wise(df):
     df_temp.sort_values('hour', inplace=True)
 
     log(df_temp)
+    for i in ['Customer', 'Dependent', 'Subscriber']:
+        if i not in df_temp.columns:
+            df_temp[i] = 0
     plot_grouped_bar3(
         df_temp.hour.values, [
             df_temp['Customer'].values, df_temp['Dependent'].values,
