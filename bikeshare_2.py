@@ -457,11 +457,11 @@ def trip_duration_stats(df):
     total_dur_hour, total_dur_minute = divmod(total_dur_minute, 60)
     total_dur_formatted_string = ''
     if total_dur_hour > 0:
-        total_dur_formatted_string += ' {} hours'.format(total_dur_hour)
+        total_dur_formatted_string += ' {} hours'.format(int(total_dur_hour))
     if total_dur_minute > 0:
-        total_dur_formatted_string += ' {} minutes'.format(total_dur_minute)
+        total_dur_formatted_string += ' {} minutes'.format(int(total_dur_minute))
     if total_dur_second > 0:
-        total_dur_formatted_string += ' {} seconds'.format(total_dur_second)
+        total_dur_formatted_string += ' {} seconds'.format(int(total_dur_second))
     total_dur_formatted_string += '.'
 
     print(total_dur_formatted_string)
@@ -513,7 +513,12 @@ def user_stats(df):
     print('\nEarliest birth year in the data is:', end=' ')
     min_birth_year = int(df['Birth Year'].min())
     max_birth_year = int(df['Birth Year'].max())
+
+    if min_birth_year == 0 and max_birth_year != 0:
+        df[df['Birth Year'] == 0] = 4712  # end of time
+        min_birth_year = int(df['Birth Year'].min())
     recent_birth_year = int(min(df["Birth Year"], key=lambda x: abs(x - now.year)))
+
     print(str(min_birth_year if min_birth_year != 0 else 'N.A.'))
     print('Most recent birth year in the data is:', end=' ')
     print(str(max_birth_year if max_birth_year != 0 else 'N.A.'))
