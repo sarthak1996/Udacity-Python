@@ -313,6 +313,10 @@ def load_data(city, month, day):
             for city_alpha in city:
                 df_temp = pd.read_csv(CITY_DATA[city_helper_dict[city_alpha]])
                 df_temp['City'] = city_alpha
+                if 'Gender' not in df_temp.columns:
+                    df_temp['Gender'] = 'Not known'
+                if 'Birth Year' not in df_temp.columns:
+                    df_temp['Birth Year'] = 0
                 df.append(df_temp)
             df = pd.concat(df, sort=False)
         else:
@@ -325,6 +329,10 @@ def load_data(city, month, day):
         df2['City'] = 'N'
         df3 = pd.read_csv(CITY_DATA[city_helper_dict['W']])
         df3['City'] = 'W'
+        if 'Gender' not in df3.columns:
+            df3['Gender'] = 'Not known'
+        if 'Birth Year' not in df3.columns:
+            df3['Birth Year'] = 0
         frames = [df1, df2, df3]
         df = pd.concat(frames, sort=False)
     log('After city filter')
@@ -361,7 +369,6 @@ def load_data(city, month, day):
             for day_alpha in day:
                 log(day_alpha)
                 df.loc[df['day_of_week'] == day_alpha, 'is_included_in_filters'] = 1
-
         else:
             df = df[df.day_of_week == day]
     log(df)
