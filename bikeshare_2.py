@@ -444,12 +444,37 @@ def trip_duration_stats(df):
 
     # display total travel time
     print('Total trip duration is :', end=' ')
-    print(str(df['Trip Duration'].sum()), end=' ')
-    print('units.')
+    total_dur = round(df['Trip Duration'].sum())
+
+    total_dur_minute, total_dur_second = divmod(total_dur, 60)
+    total_dur_hour, total_dur_minute = divmod(total_dur_minute, 60)
+    total_dur_formatted_string = ''
+    if total_dur_hour > 0:
+        total_dur_formatted_string += ' {} hours'.format(total_dur_hour)
+    if total_dur_minute > 0:
+        total_dur_formatted_string += ' {} minutes'.format(total_dur_minute)
+    if total_dur_second > 0:
+        total_dur_formatted_string += ' {} seconds'.format(total_dur_second)
+    total_dur_formatted_string += '.'
+
+    print(total_dur_formatted_string)
     # display mean travel time
-    print('Average trip duration is :', end=' ')
-    print(str(df['Trip Duration'].mean()), end=' ')
-    print('units.')
+
+    print('Average trip duration is approximately :', end=' ')
+    avg_dur = round(df['Trip Duration'].mean())
+
+    avg_dur_minute, avg_dur_second = divmod(avg_dur, 60)
+    avg_dur_hour, avg_dur_minute = divmod(avg_dur_minute, 60)
+    avg_dur_formatted_string = ''
+    if avg_dur_hour > 0:
+        avg_dur_formatted_string += ' {} hours'.format(avg_dur_hour)
+    if avg_dur_minute > 0:
+        avg_dur_formatted_string += ' {} minutes'.format(avg_dur_minute)
+    if avg_dur_second > 0:
+        avg_dur_formatted_string += ' {} seconds'.format(avg_dur_second)
+    avg_dur_formatted_string += '.'
+
+    print(avg_dur_formatted_string)
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
 
@@ -476,11 +501,11 @@ def user_stats(df):
     print('Stats for Birth year in the data'.center(size, '='))
     log(df)
     print('\nEarliest birth year in the data is:', end=' ')
-    print(str(df['Birth Year'].min()))
+    print(str(int(df['Birth Year'].min())))
     print('Most recent birth year in the data is:', end=' ')
-    print(str(df['Birth Year'].max()))
+    print(str(int(df['Birth Year'].max())))
     print('Closest birthday to current date is in', end=' ')
-    print(str(min(df["Birth Year"], key=lambda x: abs(x - now.year))))
+    print(str(int(min(df["Birth Year"], key=lambda x: abs(x - now.year)))))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
@@ -854,6 +879,7 @@ def main():
             _ = input('\nContinuing to next phase!!! Press Enter to continue')
             # print(df.columns)
             printFiltersFormatted('Stat Calculation')
+            print('PS: There may be more than one most or least populars! We are only displaying one of them\n')
             print('*' * size)
             print('*' + ('Time Stats'.center(size - 2, " ")) + '*')
             print('*' * size)
