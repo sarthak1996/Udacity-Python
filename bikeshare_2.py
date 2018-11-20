@@ -515,8 +515,10 @@ def user_stats(df):
     max_birth_year = int(df['Birth Year'].max())
 
     if min_birth_year == 0 and max_birth_year != 0:
-        df[df['Birth Year'] == 0] = 4712  # end of time
+        df.loc[df['Birth Year'] == 0,'Birth Year'] = 4712  # end of time
         min_birth_year = int(df['Birth Year'].min())
+    log(df)
+    log('Check df', True)
     recent_birth_year = int(min(df["Birth Year"], key=lambda x: abs(x - now.year)))
 
     print(str(min_birth_year if min_birth_year != 0 else 'N.A.'))
@@ -970,7 +972,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         if sys.argv[1] == 'test':
             run_mode = sys.argv[1]
-            CITY_DATA = {'chicago': 'test_data/chicago.csv',
-                         'new york city': 'test_data/new_york_city.csv',
-                         'washington': 'test_data/washington.csv'}
+            # CITY_DATA = {'chicago': 'test_data/chicago.csv',
+            #              'new york city': 'test_data/new_york_city.csv',
+            #              'washington': 'test_data/washington.csv'}
     main()
