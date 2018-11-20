@@ -1,7 +1,7 @@
 ===========How to run the script===========
 The script can be run using python3.
 Just type in python3 <filename.py>
-
+eg. python3 bikeshare_2.py
 ===========Modules used===========
 1. time
 2. pandas
