@@ -17,5 +17,5 @@ eg. python3 bikeshare_2.py
 3. python official documentation
 4. numpy official documentation
 5. matplotlib official documentation
-
+6. geeks for geeks
 
