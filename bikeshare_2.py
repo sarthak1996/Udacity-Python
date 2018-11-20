@@ -481,7 +481,10 @@ def trip_duration_stats(df):
 
 def user_stats(df):
     """Displays statistics on bikeshare users."""
-
+    if 'Gender' not in df.columns:
+        df['Gender'] = 'Not known'
+    if 'Birth Year' not in df.columns:
+        df['Birth Year'] = 0
     print('\nCalculating User Stats...\n')
     start_time = time.time()
 
@@ -501,11 +504,14 @@ def user_stats(df):
     print('Stats for Birth year in the data'.center(size, '='))
     log(df)
     print('\nEarliest birth year in the data is:', end=' ')
-    print(str(int(df['Birth Year'].min())))
+    min_birth_year = int(df['Birth Year'].min())
+    max_birth_year = int(df['Birth Year'].max())
+    recent_birth_year = int(min(df["Birth Year"], key=lambda x: abs(x - now.year)))
+    print(str(min_birth_year if min_birth_year != 0 else 'N.A.'))
     print('Most recent birth year in the data is:', end=' ')
-    print(str(int(df['Birth Year'].max())))
+    print(str(max_birth_year if max_birth_year != 0 else 'N.A.'))
     print('Closest birthday to current date is in', end=' ')
-    print(str(int(min(df["Birth Year"], key=lambda x: abs(x - now.year)))))
+    print(str(recent_birth_year if recent_birth_year != 0 else 'N.A.'))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
