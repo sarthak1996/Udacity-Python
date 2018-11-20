@@ -1,4 +1,5 @@
 ﻿User Type,Start Time,Start Station,End Station,Trip Duration,Gender,Birth Year
-Subscriber,2018-07-12 01:00:01,E,D,1,Female,1880
-,2018-06-07 01:45:56,B,C,2,Male,1890
-,2018-06-07 03:04:05,D,C,4,Female,1901
+Dependent,2018-01-15 17:00:12,A,A,2,Female,2018
+Dependent,2018-01-09 08:15:13,B,D,3,Female,2019
+Dependent,2018-04-16 17:06:02,A,C,4,Male,2020
+Dependent,2018-04-16 17:06:02,A,C,4,Male,2020
