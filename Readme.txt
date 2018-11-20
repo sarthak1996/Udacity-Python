@@ -11,5 +11,11 @@ Just type in python3 <filename.py>
 6. matplotlib
 7. sys
 
+===========Resources referred===========
+1. stackoverflow - for some queries/doubts.
+2. pandas official documentation
+3. python official documentation
+4. numpy official documentation
+5. matplotlib official documentation
 
 
